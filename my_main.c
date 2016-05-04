@@ -71,31 +71,32 @@ void my_main( int polygons ) {
   for (i=0;i<lastop;i++) {  
     switch (op[i].opcode) {
       case PUSH:
-        printf("pushing");
+        printf("pushing\n");
         push(s);
         break;
         
       case POP:
-        printf("poping");
+        printf("poping\n");
         pop(s);
         break;
       
       case MOVE:
-        printf("moving");
+        printf("moving\n");
         tmp = make_translate(op[i].op.move.d[0], op[i].op.move.d[1], op[i].op.move.d[2]);
         matrix_mult(s->data[s->top], tmp);
         copy_matrix(tmp, s->data[s->top]);
         break;
 
        case SCALE:
-        printf("scaling");
+        printf("scaling\n");
         tmp = make_scale(op[i].op.scale.d[0], op[i].op.scale.d[1], op[i].op.scale.d[2]);
         matrix_mult(s->data[s->top], tmp);
         copy_matrix(tmp, s->data[s->top]);
         break;   
         
        case ROTATE:
-        printf("rotating");
+        printf("rotating\n");
+	double theta;
         theta = op[lastop].op.rotate.degrees * (M_PI / 180);
         if (op[i].op.rotate.axis == 0){
           tmp = make_rotX(theta);
@@ -109,45 +110,48 @@ void my_main( int polygons ) {
         break;
       
       case BOX:
-        printf("boxing");
+        printf("boxing\n");
         add_box(tmp, op[i].op.box.d0[0], op[i].op.box.d0[1], op[i].op.box.d0[2], op[i].op.box.d1[0], op[i].op.box.d1[1], op[i].op.box.d1[2]);
         matrix_mult(s->data[s->top], tmp);
-        copy_matrix(tmp, s->data[s->top]);
+        draw_polygons(tmp, t, g);
         break;
         
       case SPHERE:
-        printf("sphering");
-        add_sphere(tmp, op[i].op.sphere.d[0], op[i].op.sphere.d[1], op[i].op.sphere.d0[2], op[i].op.sphere.r, 10);
+        printf("sphering\n");
+        add_sphere(tmp, op[i].op.sphere.d[0], op[i].op.sphere.d[1], op[i].op.sphere.d[2], op[i].op.sphere.r, 10);
         matrix_mult(s->data[s->top], tmp);
-        copy_matrix(tmp, s->data[s->top]);
+        draw_polygons(tmp, t, g);
         break;
         
-      case SPHERE:
-        printf("torusing");
-        add_sphere(tmp, op[i].op.torus.d[0], op[i].op.torus.d[1], op[i].op.torus.d0[2], op[i].op.torus.r0, op[i].op.torus.r1, 10);
+      case TORUS:
+        printf("torusing\n");
+        add_torus(tmp, op[i].op.torus.d[0], op[i].op.torus.d[1], op[i].op.torus.d[2], op[i].op.torus.r0, op[i].op.torus.r1, 10);
         matrix_mult(s->data[s->top], tmp);
-        copy_matrix(tmp, s->data[s->top]);
+        draw_polygons(tmp, t, g);
         break;
         
       case LINE:
-        printf("lining");
+        printf("lining\n");
         add_edge(tmp, op[i].op.line.p0[0], op[i].op.line.p0[1], op[i].op.line.p0[2], op[i].op.line.p1[0], op[i].op.line.p1[1], op[i].op.line.p1[2]);
         matrix_mult(s->data[s->top], tmp);
-        copy_matrix(tmp, s->data[s->top]);
+        draw_lines(tmp, t, g);
         break;
         
       case SAVE:
-        printf("saving");
+        printf("saving\n");
         save_extension(t, op[i].op.save.p -> name);
         break;
     
       case DISPLAY:
-        printf("displaying");
+        printf("displaying\n");
         display(t);;
         break;
+      case COMMENT:
+	printf("commmenting\n");
+	break;
         
       default:
-        printf("failing")
+        printf("failing\n");
         break;
     }
   }
