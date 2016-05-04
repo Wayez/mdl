@@ -110,11 +110,45 @@ void my_main( int polygons ) {
       
       case BOX:
         printf("boxing");
-        add_box(tmp, op[i].op.box.d0[0], op[i].op.boxe.d0[1], op[i].op.box.d0[2], op[i].op.box.d1[0], op[i].op.box.d1[1], op[i].op.box.d1[2]);
+        add_box(tmp, op[i].op.box.d0[0], op[i].op.box.d0[1], op[i].op.box.d0[2], op[i].op.box.d1[0], op[i].op.box.d1[1], op[i].op.box.d1[2]);
         matrix_mult(s->data[s->top], tmp);
         copy_matrix(tmp, s->data[s->top]);
         break;
         
+      case SPHERE:
+        printf("sphering");
+        add_sphere(tmp, op[i].op.sphere.d[0], op[i].op.sphere.d[1], op[i].op.sphere.d0[2], op[i].op.sphere.r, 10);
+        matrix_mult(s->data[s->top], tmp);
+        copy_matrix(tmp, s->data[s->top]);
+        break;
+        
+      case SPHERE:
+        printf("torusing");
+        add_sphere(tmp, op[i].op.torus.d[0], op[i].op.torus.d[1], op[i].op.torus.d0[2], op[i].op.torus.r0, op[i].op.torus.r1, 10);
+        matrix_mult(s->data[s->top], tmp);
+        copy_matrix(tmp, s->data[s->top]);
+        break;
+        
+      case LINE:
+        printf("lining");
+        add_edge(tmp, op[i].op.line.p0[0], op[i].op.line.p0[1], op[i].op.line.p0[2], op[i].op.line.p1[0], op[i].op.line.p1[1], op[i].op.line.p1[2]);
+        matrix_mult(s->data[s->top], tmp);
+        copy_matrix(tmp, s->data[s->top]);
+        break;
+        
+      case SAVE:
+        printf("saving");
+        save_extension(t, op[i].op.save.p -> name);
+        break;
+    
+      case DISPLAY:
+        printf("displaying");
+        display(t);;
+        break;
+        
+      default:
+        printf("failing")
+        break;
     }
   }
 }
