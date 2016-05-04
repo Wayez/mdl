@@ -60,6 +60,9 @@ void my_main( int polygons ) {
   struct stack *s;
   screen t;
   color g;
+  g.red = 0;
+  g.green = 255;
+  g.blue = 0;
   
   s = new_stack();
   tmp = new_matrix(4, 1000);
@@ -67,6 +70,43 @@ void my_main( int polygons ) {
 
   for (i=0;i<lastop;i++) {  
     switch (op[i].opcode) {
+      case PUSH:
+        printf("pushing");
+        push(s);
+        break;
+        
+      case POP:
+        printf("poping");
+        pop(s);
+        break;
+      
+      case MOVE:
+        printf("moving");
+        tmp = make_translate(op[i].op.move.d[0], op[i].op.move.d[1], op[i].op.move.d[2]);
+        matrix_mult(s->data[s->top], tmp);
+        copy_matrix(tmp, s->data[s->top]);
+        break;
+
+       case SCALE:
+        printf("scaling");
+        tmp = make_scale(op[i].op.move.d[0], op[i].op.move.d[1], op[i].op.move.d[2]);
+        matrix_mult(s->data[s->top], tmp);
+        copy_matrix(tmp, s->data[s->top]);
+        break;   
+        
+       case ROTATE:
+        printf("rotating");
+        theta = op[lastop].op.rotate.degrees * (M_PI / 180);
+        if (op[i].op.rotate.axis == 0){
+          tmp = make_rotX(theta);
+        } else if (op[i].op.rotate.axis == 1){
+          tmp = make_rotY(theta);
+        } else if (op[i].op.rotate.axis == 2){
+          tmp = make_rotZ(theta);
+        }
+        matrix_mult(s->data[s->top], tmp);
+        copy_matrix(tmp, s->data[s->top]);
+        break;
     }
   }
 }
