@@ -89,7 +89,7 @@ void my_main( int polygons ) {
 
        case SCALE:
         printf("scaling");
-        tmp = make_scale(op[i].op.move.d[0], op[i].op.move.d[1], op[i].op.move.d[2]);
+        tmp = make_scale(op[i].op.scale.d[0], op[i].op.scale.d[1], op[i].op.scale.d[2]);
         matrix_mult(s->data[s->top], tmp);
         copy_matrix(tmp, s->data[s->top]);
         break;   
@@ -107,6 +107,14 @@ void my_main( int polygons ) {
         matrix_mult(s->data[s->top], tmp);
         copy_matrix(tmp, s->data[s->top]);
         break;
+      
+      case BOX:
+        printf("boxing");
+        add_box(tmp, op[i].op.box.d0[0], op[i].op.boxe.d0[1], op[i].op.box.d0[2], op[i].op.box.d1[0], op[i].op.box.d1[1], op[i].op.box.d1[2]);
+        matrix_mult(s->data[s->top], tmp);
+        copy_matrix(tmp, s->data[s->top]);
+        break;
+        
     }
   }
 }
